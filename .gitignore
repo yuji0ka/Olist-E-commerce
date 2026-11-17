@@ -1,0 +1,10 @@
+# Artefatos de treino do CatBoost
+catboost_info/
+
+# Arquivos temporários do Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Arquivos de sistema
+.DS_Store
