@@ -120,7 +120,7 @@ Também criada a feature `product_volume_cm3` = comprimento × altura × largura
 
 - **Distribuição:** fortemente assimétrica à direita. Mediana de R$ 74,90, média de R$ 120,20, máximo de R$ 6.735.
 - **Log:** com `log1p(price)`, a distribuição fica próxima de um sino, comprimindo a cauda longa.
-- **Outliers:** o limite superior do IQR é R$ 279, com 7,7% das linhas acima. Os 10 maiores preços foram validados — correspondem a categorias plausíveis (eletroportáteis, consoles, relógios) com pesos coerentes. Não há indício de erro de cadastro, então os outliers foram mantidos.
+- **Outliers:** o limite superior do IQR é R$ 277, com 7,5% das linhas acima. Os 10 maiores preços foram validados — corresponde a categorias plausíveis (eletroportáteis, consoles, relógios) com pesos coerentes. Não há indício de erro de cadastro, então os outliers foram mantidos.
 
 ![Distribuição do preço e log](imagens/histograma_preco.png)
 
@@ -272,7 +272,7 @@ CatBoost escolhido pelo pipeline nativo com `cat_features`. Treinado no treino c
 | MAPE | 0,22 | 0,46 | 0,24 |
 | RMSE | 106,47 | 147,35 | 40,87 |
 
-Baseline (mediana): MAE de R$ 82,10. O modelo melhora ~40% o MAE e atinge R² ≈ 0,47.
+Baseline (mediana): MAE de R$ 82,10. O modelo melhora ~40% o MAE e atinge R² ≈ 0,44.
 
 **Amostra de previsões — CatBoost (melhor modelo):**
 
@@ -313,6 +313,10 @@ Nenhuma variável isolada explica bem o preço:
 - Peso (Spearman 0,53), frete (0,43) e volume (0,40) são as mais fortes
 - Nome (0,04) e fotos (0,02) quase não têm relação
 - Dentro de cada categoria, o preço varia de 2 a 4× (IQR)
+
+ gap entre treino e teste (MAE 30,47 vs 49,38) indica que o modelo se ajusta ao treino melhor do que generaliza. A hipótese inicial era que `product_id` (44,2% das linhas do teste são de produtos que o treino nunca viu) e `seller_id` fossem a causa, por permitirem decorar o preço de cada item.
+
+Resultado do experimento: o gap quase não mudou (-0,54) e o MAE de teste piorou (+1,60). Os IDs, portanto, não explicam o gap. Eles ainda carregam sinal útil, já que o `product_id` só pode ajudar nos 55,8% das linhas do teste com produto já visto. As causas prováveis, não testadas aqui, são a capacidade do modelo (profundidade 8, 500 iterações) e a mudança de composição de categorias entre treino e teste (~16%).
 
 Os ~53% de variância não explicados vêm de fatores fora da base: marca, concorrência, estratégia de margem, reviews, sazonalidade específica e percepção de valor.
 
