@@ -26,6 +26,16 @@ Projeto de Machine Learning para estimar o preço de produtos no marketplace da 
 
 Estimar o preço de produtos em um marketplace. A precificação é uma das decisões mais importantes para o negócio, pois influencia diretamente a demanda, a receita e a margem de lucro. O objetivo é desenvolver um modelo capaz de fornecer uma estimativa de preço a partir das características do produto e, ao mesmo tempo, contribuir para a compreensão da dinâmica de preços no marketplace.
 ## 2. Limpeza e pré-processamento dos dados (notebook `03_gold`)
+### Plataforma — Databricks e a Arquitetura Medallion
+
+Este projeto foi desenvolvido no **Databricks**, uma plataforma de dados que me permite controlar, tratar e organizar os dados para diferentes tipos de projetos. Todos os dados da Olist passam por um pipeline único, compartilhado entre os projetos do repositório, seguindo a **Arquitetura Medallion**:
+
+- **Bronze** — os 9 CSVs originais da Olist são carregados como tabelas Delta no Unity Catalog, preservando os dados brutos exatamente como chegaram.
+- **Silver** — os dados são limpos, tipados e deduplicados (checagens de nulos, duplicados e integridade referencial), formando uma base confiável e padronizada.
+- **Gold** — etapa final antes do consumo pelo projeto: as tabelas silver recebem os tratamentos específicos deste projeto e são salvas como `olist.gold.powerbi_*`, prontas para a modelagem no Power BI.
+
+Essa separação em camadas garante que cada projeto consuma a mesma base limpa, sem retrabalho, e que qualquer novo projeto possa ser construído em cima da silver sem afetar os demais.
+
 ### Fonte dos dados
 
 

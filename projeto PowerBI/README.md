@@ -4,6 +4,9 @@ Este é um dos projetos do repositório [Olist E-commerce](https://github.com/yu
 
 Projeto de Business Intelligence para analisar as vendas do marketplace da Olist, transformando os dados em dashboards interativos para acompanhar a situação do negócio, monitorar os principais KPIs e extrair insights. O projeto percorre o pipeline completo: limpeza dos dados (gold), modelagem das relações entre tabelas no Power BI, criação de medidas DAX e a apresentação dos resultados em um dashboard.
 
+## Palavras-chave
+
+`Business Intelligence` `Power BI` `DAX` `Star Schema` `Modelagem de Dados` `Dashboards` `KPIs` `Data Visualization` `E-commerce` `Olist` `Medallion Architecture` `Delta Lake` `PySpark` `Databricks` `Unity Catalog` `YoY`
 
 
 ## Pipeline
@@ -22,6 +25,19 @@ Muitas empresas de e-commerce não monitoram dados estruturados e costumam tomar
 A ideia é ter todas as principais métricas acessíveis e sempre comparar os resultados com o mesmo período do ano anterior (YoY) para tirar a sazonalidade. No nosso projeto, os gráficos mostram o período de 01/01/2018 até 31/08/2018 (última data disponível), e fazem o comparativo direto com o mesmo período de 2017.
 
 ## 2. Limpeza e preparação dos dados
+### Plataforma — Databricks e a Arquitetura Medallion
+
+Este projeto foi desenvolvido no **Databricks**, uma plataforma de dados que me permite controlar, tratar e organizar os dados para diferentes tipos de projetos. Todos os dados da Olist passam por um pipeline único, compartilhado entre os projetos do repositório, seguindo a **Arquitetura Medallion**:
+
+- **Bronze** — os 9 CSVs originais da Olist são carregados como tabelas Delta no Unity Catalog, preservando os dados brutos exatamente como chegaram.
+- **Silver** — os dados são limpos, tipados e deduplicados (checagens de nulos, duplicados e integridade referencial), formando uma base confiável e padronizada.
+- **Gold** — etapa final antes do consumo pelo projeto: as tabelas silver recebem os tratamentos específicos deste projeto e são salvas como `olist.gold.powerbi_*`, prontas para a modelagem no Power BI.
+
+Essa separação em camadas garante que cada projeto consuma a mesma base limpa, sem retrabalho, e que qualquer novo projeto possa ser construído em cima da silver sem afetar os demais.
+### Fonte dos dados
+
+
+Base pública da Olist no Kaggle: https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce
 
 Foram usadas as 8 tabelas da camada silver (`olist.silver.*`). Antes de criar as tabelas gold específicas para o Power BI , cada conjunto de dados passou por verificações e tratamentos:
 
@@ -40,7 +56,7 @@ Após os tratamentos, todas as tabelas foram salvas em formato gold, prefixadas 
 
 ## 3. Modelagem do banco relacional
 
-![Modelo Relacional Power BI](imagem/modelo_relacional_powerbi.PNG)
+![Modelo Relacional Power BI](imagem/modelo_relacional_powerbi.png)
 
 O modelo relacional foi estruturado com 8 tabelas principais, seguindo um formato estrela (“star schema”) clássico de BI. Cada tabela doravante traz campos relevantes e é utilizada para garantir relações simples e eficientes entre fatos e dimensões no Power BI. 
 
