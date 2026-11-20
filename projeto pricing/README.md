@@ -7,7 +7,6 @@ Projeto de Machine Learning para estimar o preço de produtos no marketplace da 
 ## Palavras-chave
 
 `Machine Learning` `Pricing` `Regressão` `CatBoost` `XGBoost` `scikit-learn` `Gradient Boosting` `Validação Cruzada Temporal` `TimeSeriesSplit` `Feature Engineering` `EDA` `Medallion Architecture` `Delta Lake` `PySpark` `Databricks` `Unity Catalog` `log1p` `Hyperparameter Tuning` `Overfitting`
-
 ## Pipeline
 
 1. Definição do problema de negócio
@@ -18,17 +17,17 @@ Projeto de Machine Learning para estimar o preço de produtos no marketplace da 
 6. Treinamento dos modelos e ajuste de hiperparâmetros (notebook `modelagem`)
 7. Teste e avaliação final do modelo (notebook `modelagem`)
 8. Interpretação dos resultados e insights de negócio (notebook `modelagem`)
-9. Deploy do modelo (futuro)
+
 
 ---
 
-## Notebook 1: `03_gold` — Limpeza e preparação dos dados
 
-### Problema de negócio
+## 1. Problema de negócio
 
 Estimar o preço de produtos em um marketplace. A precificação é uma das decisões mais importantes para o negócio, pois influencia diretamente a demanda, a receita e a margem de lucro. O objetivo é desenvolver um modelo capaz de fornecer uma estimativa de preço a partir das características do produto e, ao mesmo tempo, contribuir para a compreensão da dinâmica de preços no marketplace.
-
+## 2. Limpeza e pré-processamento dos dados (notebook `03_gold`)
 ### Fonte dos dados
+
 
 Base pública da Olist no Kaggle: https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce
 
@@ -59,7 +58,7 @@ O join é feito com `left join` sobre `order_id`, `product_id` e `seller_id`, pr
 
 3. **Remoção de 1 linha com peso nulo** — Uma única linha com `product_weight_g` nulo (e dimensões nulas) foi removida.
 
-### Tabela gold final
+### 3. Entendimento do problema e estratégia de validação (notebook `03_gold`)
 
 **Tabela:** `olist.gold.projeto_pricing`
 **Dimensão:** 111.046 linhas × 17 colunas
@@ -93,7 +92,7 @@ Avaliação de `seller_id` e `product_id` como possíveis features:
 
 ---
 
-## Notebook 2: `EDA_pricing` — Análise exploratória dos dados
+## 4. Divisão dos dados em treino e teste (notebook `EDA_pricing`)
 
 ### Divisão treino/teste
 
@@ -115,7 +114,7 @@ Criadas a partir de `order_purchase_timestamp`:
 | `purchase_is_weekend` | 1 se sábado ou domingo, 0 caso contrário |
 
 Também criada a feature `product_volume_cm3` = comprimento × altura × largura, que resume as 3 dimensões em um único valor.
-
+### 5. Exploração dos dados (notebook `EDA_pricing`)
 ### Análise do target (preço)
 
 - **Distribuição:** fortemente assimétrica à direita. Mediana de R$ 74,90, média de R$ 120,20, máximo de R$ 6.735.
@@ -188,7 +187,7 @@ Usou-se Spearman em vez de Pearson porque o preço tem distribuição assimétri
 
 ---
 
-## Notebook 3: `modelagem` — Treinamento e avaliação dos modelos
+## 6. Treinamento dos modelos e ajuste de hiperparâmetros (notebook `modelagem`)
 
 ### Bibliotecas
 
@@ -262,7 +261,7 @@ Val MAE: 49,72 → **44,44** (gap de 0,10 do CatBoost)
 
 O loop manual foi usado em vez de `RandomizedSearchCV` porque o scikit-learn não consegue clonar o parâmetro `cat_features` do CatBoost.
 
-### Avaliação final no teste
+### 7. Teste e avaliação final do modelo (notebook `modelagem`)
 
 CatBoost escolhido pelo pipeline nativo com `cat_features`. Treinado no treino completo e avaliado em `X_test` (nunca usado antes):
 
@@ -305,7 +304,8 @@ Experimento: mesmo modelo, removendo `product_id` e `seller_id`:
 
 O gap caiu 0,54, mas o test MAE subiu 1,60 — os IDs causam overfitting, mas também carregam sinal real para os 56% dos produtos conhecidos no teste.
 
-### Conclusões e insights de negócio
+### 8. Interpretação dos resultados e insights de negócio (notebook `modelagem`)
+
 
 **O modelo está próximo do teto do que os dados permitem.** Todas as intervenções (tuning, feature sets, remoção de IDs, log) mudam o MAE em ±1 a 3 reais. O gargalo não está no modelo, mas na ausência de features preditivas.
 
@@ -341,3 +341,10 @@ Esses dados estão fora do escopo da base Olist disponível.
 3. `modelagem` — treinamento, tuning e avaliação final
 
 > Pré-requisito: os notebooks `00_setup`, `01_bronze` e `02_silver` (na pasta raiz) já devem ter sido executados.
+---
+
+## 📧 Contato
+Se você tiver interesse, feedback ou quiser discutir o projeto:
+
+- frankyujioka@gmail.com
+- [LinkedIn](https://www.linkedin.com/in/frank-yuji-oka-4140672a1)

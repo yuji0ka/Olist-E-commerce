@@ -78,6 +78,29 @@ O modelo melhora ~40% o MAE em relação ao baseline (mediana = R$ 82,10). O gap
 
 ---
 
+### 📁 Projeto Power BI — Dashboard de Vendas
+
+**Pasta:** [projeto PowerBI/](https://github.com/yuji0ka/Olist-E-commerce/tree/main/projeto%20PowerBI)
+
+**Problema:** monitorar as vendas do marketplace em um painel único, acompanhando os principais KPIs (receita, frete, pedidos, avaliações) e comparando os resultados com o mesmo período do ano anterior (YoY).
+
+**Abordagem:**
+- 8 tabelas gold (`olist.gold.powerbi_*`) derivadas da silver, com tratamentos de duplicatas e nulos
+- Modelo relacional em estrela (star schema) com fatos e dimensões no Power BI
+- Medidas DAX para KPIs, análises YoY e simplificação de categorias (74 → 12 grupos de produtos)
+- 4 dashboards interativos: Visão Geral & Receita, Pagamentos & Parcelamento, Logística & Fretes e Satisfação & Reviews — todos com filtros de Estado, Categoria e Data
+
+**Principais insights:**
+- Atraso no frete derruba a nota de avaliação (entregas no prazo têm média acima de 4)
+- Frete mais barato em SP, DF, MG e PR; mais caro em estados distantes como RR, PB e AC
+- Receita concentrada em poucas categorias (Casa & Móveis, Eletrônicos, Beleza & Saúde)
+- Crescimento significativo da receita de 2017 para 2018, mês a mês
+- Compras de maior valor costumam ser parceladas em mais vezes
+
+> Todos os detalhes — tratamentos, modelagem, DAX, dashboards e insights — estão no README dentro da pasta [projeto PowerBI/](https://github.com/yuji0ka/Olist-E-commerce/tree/main/projeto%20PowerBI).
+
+---
+
 ## Fonte dos dados
 
 Base pública da Olist no Kaggle: https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce
@@ -88,5 +111,6 @@ Base pública da Olist no Kaggle: https://www.kaggle.com/datasets/olistbr/brazil
 2. `01_bronze` — carrega os CSVs para o bronze
 3. `02_silver` — limpa e tipa as tabelas
 4. `projeto pricing/03_gold` → `EDA_pricing` → `modelagem` — pipeline do projeto pricing
+5. `projeto PowerBI/03_gold` — pipeline do projeto Power BI
 
 > Novos projetos serão adicionados conforme forem criados, cada um com sua própria pasta e tabela gold.
